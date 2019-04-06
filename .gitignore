@@ -1,0 +1,16 @@
+# ignore only binaries
+
+bin/*
+!bin/.gitkeep
+
+.DS_Store
+
+
+.vscode/ipch
+
+location.hh
+parser.cpp
+parser.hpp
+position.hh
+scanner.cpp
+stack.hh
