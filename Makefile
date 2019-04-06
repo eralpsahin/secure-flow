@@ -1,12 +1,12 @@
-CC		:= g++
+CC			 := g++
 CC_FLAGS := -g -Wall -Wextra -g
 
-BIN		:= bin
+BUILD			:= build
 INCLUDE	:= include
-SRC := src
+SRC 		:= src
 
-EXECUTABLE	:= main
-DSYM := main.dSYM
+EXECUTABLE	:= $(BUILD)/main
+DSYM := $(BUILD)/main.dSYM
 RM := rm -rf
 
 CLEAN_LIST := $(INCLUDE)/scanner.cpp\
@@ -17,18 +17,17 @@ CLEAN_LIST := $(INCLUDE)/scanner.cpp\
 FILE_LIST := $(SRC)/main.cpp $(SRC)/interpreter.cpp\
 					$(SRC)/command.cpp
 
-.PHONY : interclean clean scanner parser run
+.PHONY: default
+default: $(EXECUTABLE) interclean
 
-default: $(BIN)/$(EXECUTABLE) interclean
-
-$(BIN)/$(EXECUTABLE): scanner parser $(SRC)/*
+$(EXECUTABLE): scanner parser $(SRC)/*
 	$(CC) $(CC_FLAGS) -I$(INCLUDE) \
 	$(INCLUDE)/scanner.cpp $(INCLUDE)/parser.cpp \
 	$(FILE_LIST) \
-	-o $(BIN)/$(EXECUTABLE)
+	-o $(EXECUTABLE)
 
-run: $(BIN)/$(EXECUTABLE)
-	$(BIN)/main
+run: $(EXECUTABLE)
+	$(EXECUTABLE)
 
 scanner: $(SRC)/scanner.l
 	flex -o include/scanner.cpp $(SRC)/scanner.l
@@ -37,7 +36,7 @@ parser: $(SRC)/parser.y
 	bison -o include/parser.cpp $(SRC)/parser.y
 
 interclean:
-	$(RM) $(BIN)/$(DSYM) $(CLEAN_LIST)
+	$(RM) $(DSYM) $(CLEAN_LIST)
 
 clean:
-	$(RM) $(BIN)/$(EXECUTABLE) $(BIN)/$(DSYM) $(CLEAN_LIST)
+	$(RM) $(EXECUTABLE) $(DSYM) $(CLEAN_LIST)
