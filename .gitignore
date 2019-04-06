@@ -6,7 +6,7 @@ bin/*
 .DS_Store
 
 
-.vscode/ipch
+.vscode/
 
 location.hh
 parser.cpp
