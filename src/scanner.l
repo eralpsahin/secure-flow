@@ -51,12 +51,12 @@
   return EzAquarii::Parser::make_RIGHTPAR(EzAquarii::location());
 }
             
-; {
+";" {
   cout << "Scanner: ';'" << endl;
   return EzAquarii::Parser::make_SEMICOLON(EzAquarii::location());
 }
             
-, {
+"," {
   cout << "Scanner: ','" << endl;
   return EzAquarii::Parser::make_COMMA(EzAquarii::location());
 }
