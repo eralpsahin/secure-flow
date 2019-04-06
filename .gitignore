@@ -1,7 +1,7 @@
 # ignore only binaries
 
-bin/*
-!bin/.gitkeep
+build/*
+!build/.gitkeep
 
 .DS_Store
 
