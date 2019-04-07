@@ -31,23 +31,17 @@ class Interpreter {
    * Run parser. Results are stored inside.
    * \returns 0 on success, 1 on failure
    */
-  int parse();
+  int Parse();
 
   /**
    * Clear AST
    */
-  void clear();
+  void Clear();
 
   /**
    * Print AST
    */
-  std::string str() const;
-
-  /**
-   * Switch scanner input stream. Default is standard input (std::cin).
-   * It will also reset AST.
-   */
-  void switchInputStream(std::istream *is);
+  std::string ToString() const;
 
   /**
    * This is needed so that Scanner and Parser can call some
@@ -58,19 +52,19 @@ class Interpreter {
 
  private:
   // Used internally by Parser to insert AST nodes.
-  void addCommand(const Command &cmd);
+  void AddCommand(const Command &cmd);
 
   // Used internally by Scanner YY_USER_ACTION to update location indicator
-  void increaseLocation(unsigned int loc);
+  void IncreaseLocation(unsigned int loc);
 
   // Used to get last Scanner location. Used in error messages.
-  unsigned int location() const;
+  unsigned int GetLocation() const;
 
  private:
-  Scanner m_scanner;
-  Parser m_parser;
-  std::vector<Command> m_commands;  // Example AST
-  unsigned int m_location;          // Used by scanner
+  Scanner m_scanner_;
+  Parser m_parser_;
+  std::vector<Command> m_commands_;  // Example AST
+  unsigned int m_location_;          // Used by scanner
 };
 
 }  // namespace EzAquarii

@@ -34,12 +34,12 @@ class Interpreter;
 
 class Scanner : public yyFlexLexer {
  public:
-  Scanner(Interpreter &driver) : m_driver(driver) {}
+  Scanner(Interpreter &driver) : m_driver_(driver) {}
   virtual ~Scanner() {}
   virtual EzAquarii::Parser::symbol_type get_next_token();
 
  private:
-  Interpreter &m_driver;
+  Interpreter &m_driver_;
 };
 
 }  // namespace EzAquarii

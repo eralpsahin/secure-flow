@@ -8,22 +8,22 @@ using std::cout;
 using std::endl;
 
 Command::Command(const std::string &name, const std::vector<uint64_t> arguments)
-    : m_name(name), m_args(arguments) {}
+    : m_name_(name), m_args_(arguments) {}
 
-Command::Command(const std::string &name) : m_name(name), m_args() {}
+Command::Command(const std::string &name) : m_name_(name), m_args_() {}
 
-Command::Command() : m_name(), m_args() {}
+Command::Command() : m_name_(), m_args_() {}
 
 Command::~Command() {}
 
-std::string Command::str() const {
+std::string Command::ToString() const {
   std::stringstream ts;
-  ts << "name = [" << m_name << "], ";
+  ts << "name = [" << m_name_ << "], ";
   ts << "arguments = [";
 
-  for (size_t i = 0; i < m_args.size(); i++) {
-    ts << m_args[i];
-    if (i < m_args.size() - 1) {
+  for (size_t i = 0; i < m_args_.size(); i++) {
+    ts << m_args_[i];
+    if (i < m_args_.size() - 1) {
       ts << ", ";
     }
   }
@@ -32,4 +32,4 @@ std::string Command::str() const {
   return ts.str();
 }
 
-std::string Command::name() const { return m_name; }
+std::string Command::GetName() const { return m_name_; }

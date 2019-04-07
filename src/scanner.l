@@ -12,9 +12,12 @@
 	// as tokens, we must redefine it to change type from `int` to `Parser::semantic_type`
 	#define yyterminate() EzAquarii::Parser::make_END(EzAquarii::location());
 
-	// This will track current scanner location.
-	// Action is called when length of the token is known.
-	#define YY_USER_ACTION m_driver.increaseLocation(yyleng);
+	/* 
+	* This will track current scanner location.
+	* Action is called when length of the token is known.
+	* Gets called on token match before the action in flex.
+	*/
+	#define YY_USER_ACTION m_driver_.IncreaseLocation(yyleng);
 	
 	// !!!WARNING!!!
 	// Location API is used, but the location is not initialized, 'cause I'm lazy. When making
@@ -38,7 +41,7 @@
 
 [a-z]+ { 
   cout << "Scanner: identifier [" << yytext << "]" << endl;
-  return EzAquarii::Parser::make_STRING(yytext, EzAquarii::location( /* put location data here if you want */ )); 
+  return EzAquarii::Parser::make_IDENTIFIER(yytext, EzAquarii::location( /* put location data here if you want */ )); 
 }
             
 "(" {

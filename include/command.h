@@ -18,12 +18,12 @@ class Command {
   Command();
   ~Command();
 
-  std::string str() const;
-  std::string name() const;
+  std::string ToString() const;
+  std::string GetName() const;
 
  private:
-  std::string m_name;
-  std::vector<uint64_t> m_args;
+  std::string m_name_;
+  std::vector<uint64_t> m_args_;
 };
 
 }  // namespace EzAquarii

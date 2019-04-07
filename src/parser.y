@@ -1,5 +1,6 @@
 %skeleton "lalr1.cc" /* -*- C++ -*- */
 %require "3.0"
+%language "c++" // Use C++ Lang
 %defines
 %define parser_class_name { Parser }
 
@@ -52,14 +53,14 @@
 %lex-param { EzAquarii::Interpreter &driver }
 %parse-param { EzAquarii::Scanner &scanner }
 %parse-param { EzAquarii::Interpreter &driver }
-%locations
+%locations // Location Tracking
 %define parse.trace
 %define parse.error verbose
 
-%define api.token.prefix {TOKEN_}
+%define api.token.prefix {TOKEN_} // Potentially unused
 
-%token END 0 "end of file"
-%token <std::string> STRING  "string";
+%token END 0 "end of file" // End of File error message (Potentially unused)
+%token <std::string> IDENTIFIER  "identifier";
 %token <uint64_t> NUMBER "number";
 %token LEFTPAR "leftpar";
 %token RIGHTPAR "rightpar";
@@ -84,32 +85,32 @@ program :   {
                 
                 cout << endl << "prompt> ";
                 
-                driver.clear();
+                driver.Clear();
             }
         | program command
             {
                 const Command &cmd = $command;
                 cout << "command parsed, updating AST" << endl;
-                driver.addCommand(cmd);
+                driver.AddCommand(cmd);
                 cout << endl << "prompt> ";
             }
         | program SEMICOLON
             {
                 cout << "*** STOP RUN ***" << endl;
-                cout << driver.str() << endl;
+                cout << driver.ToString() << endl;
             }
         ;
 
 
-command : STRING LEFTPAR RIGHTPAR
+command : IDENTIFIER LEFTPAR RIGHTPAR
         {
-            string &id = $STRING;
+            string &id = $IDENTIFIER;
             cout << "ID: " << id << endl;
             $command = Command(id);
         }
-    | STRING LEFTPAR arguments RIGHTPAR
+    | IDENTIFIER LEFTPAR arguments RIGHTPAR
         {
-            string &id = $STRING;
+            string &id = $IDENTIFIER;
             const std::vector<uint64_t> &args = $arguments;
             cout << "function: " << id << ", " << args.size() << endl;
             $command = Command(id, args);
@@ -142,5 +143,5 @@ void EzAquarii::Parser::error(const location &loc , const std::string &message) 
         // Let's grab location directly from driver class.
 	// cout << "Error: " << message << endl << "Location: " << loc << endl;
 	
-        cout << "Error: " << message << endl << "Error location: " << driver.location() << endl;
+        cout << "Error: " << message << endl << "Error location: " << driver.GetLocation() << endl;
 }
