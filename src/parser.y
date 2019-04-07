@@ -88,7 +88,7 @@ program :   {
             }
         | program command
             {
-                const Command &cmd = $2;
+                const Command &cmd = $command;
                 cout << "command parsed, updating AST" << endl;
                 driver.addCommand(cmd);
                 cout << endl << "prompt> ";
@@ -103,29 +103,29 @@ program :   {
 
 command : STRING LEFTPAR RIGHTPAR
         {
-            string &id = $1;
+            string &id = $STRING;
             cout << "ID: " << id << endl;
-            $$ = Command(id);
+            $command = Command(id);
         }
     | STRING LEFTPAR arguments RIGHTPAR
         {
-            string &id = $1;
-            const std::vector<uint64_t> &args = $3;
+            string &id = $STRING;
+            const std::vector<uint64_t> &args = $arguments;
             cout << "function: " << id << ", " << args.size() << endl;
-            $$ = Command(id, args);
+            $command = Command(id, args);
         }
     ;
 
 arguments : NUMBER
         {
-            uint64_t number = $1;
-            $$ = std::vector<uint64_t>();
-            $$.push_back(number);
+            uint64_t number = $NUMBER;
+            $arguments = std::vector<uint64_t>();
+            $arguments.push_back(number);
             cout << "first argument: " << number << endl;
         }
     | arguments COMMA NUMBER
         {
-            uint64_t number = $3;
+            uint64_t number = $NUMBER;
             std::vector<uint64_t> &args = $1;
             args.push_back(number);
             $$ = args;
