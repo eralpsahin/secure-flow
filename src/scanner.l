@@ -30,49 +30,81 @@
 	// boilerplate for this small example. Bummer.
 %}
 
-%option nodefault
-%option noyywrap
-%option c++
-%option yyclass="Scanner"
-%option prefix="EzAquarii_"
+%option nodefault noyywrap c++ yyclass="Scanner" prefix="EzAquarii_"
 
 %%
 
+"letvar" { /* LETVAR keyword for local variable declaration */
+  cout << "Scanner: 'letvar'" << endl;
+  return EzAquarii::Parser::make_LETVAR(EzAquarii::location());
+}
 
-[a-z]+ { 
-  cout << "Scanner: identifier [" << yytext << "]" << endl;
-  return EzAquarii::Parser::make_IDENTIFIER(yytext, EzAquarii::location( /* put location data here if you want */ )); 
+"in" { /* IN keyword for local variable declarations */
+  cout << "Scanner: 'in'" << endl;
+  return EzAquarii::Parser::make_IN(EzAquarii::location());
 }
-            
-"(" {
-  cout << "Scanner: '('" << endl;
-  return EzAquarii::Parser::make_LEFTPAR(EzAquarii::location());
+
+"if" { /* IF keyword for conditionals */
+  cout << "Scanner: 'if'" << endl;
+  return EzAquarii::Parser::make_IF(EzAquarii::location());
 }
-            
-")" { 
-  cout << "Scanner: ')'" << endl;
-  return EzAquarii::Parser::make_RIGHTPAR(EzAquarii::location());
+
+"then" { /* THEN keyword for conditionals */
+  cout << "Scanner: 'then'" << endl;
+  return EzAquarii::Parser::make_THEN(EzAquarii::location());
 }
+
+"else" { /* ELSE keyword for conditionals */
+  cout << "Scanner: 'else'" << endl;
+  return EzAquarii::Parser::make_ELSE(EzAquarii::location());
+}
+
+"while" { /* WHILE keyword for loops */
+  cout << "Scanner: 'while'" << endl;
+  return EzAquarii::Parser::make_WHILE(EzAquarii::location());
+}
+
+"do" { /* DO keyword for loops */
+  cout << "Scanner: 'do'" << endl;
+  return EzAquarii::Parser::make_DO(EzAquarii::location());
+}
+
+
             
-";" {
+";" { /* SEMICOLON used in c;c' */
   cout << "Scanner: ';'" << endl;
   return EzAquarii::Parser::make_SEMICOLON(EzAquarii::location());
 }
-            
-"," {
-  cout << "Scanner: ','" << endl;
-  return EzAquarii::Parser::make_COMMA(EzAquarii::location());
-}
-            
-[\n\t ] {}
 
-[1-9][0-9]* {
+[_a-zA-Z][_a-zA-Z0-9]* { /* IDENTIFIER used in expressions  */
+  cout << "Scanner: identifier [" << yytext << "]" << endl;
+  return EzAquarii::Parser::make_IDENTIFIER(yytext, EzAquarii::location( /* put location data here if you want */ )); 
+}
+
+-?[0-9]* { /* NUMBER integer literal */
   cout << "Scanner: decimal number: " << yytext << endl;
   uint64_t number = strtoull(yytext, 0, 10);
   return EzAquarii::Parser::make_NUMBER(number, EzAquarii::location());
 }
 
-.  { 
+[\n\t ] {}
+
+"," { /* TODO: remove from the language */
+  cout << "Scanner: ','" << endl;
+  return EzAquarii::Parser::make_COMMA(EzAquarii::location());
+}
+            
+"(" { /* TODO: remove from the language */
+  cout << "Scanner: '('" << endl;
+  return EzAquarii::Parser::make_LEFTPAR(EzAquarii::location());
+}
+            
+")" { /* TODO: remove from the language */
+  cout << "Scanner: ')'" << endl;
+  return EzAquarii::Parser::make_RIGHTPAR(EzAquarii::location());
+}
+
+. { 
   cout << "Scanner: unknown character [" << yytext << "]" << endl; 
 }
             

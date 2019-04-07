@@ -57,15 +57,24 @@
 %define parse.trace
 %define parse.error verbose
 
-%define api.token.prefix {TOKEN_} // Potentially unused
+// Name clashes in generated files (Potentially unused)
+%define api.token.prefix {TOKEN_}
 
-%token END 0 "end of file" // End of File error message (Potentially unused)
+%token SEMICOLON "semicolon";
+%token IF "if";
+%token THEN "then";
+%token ELSE "else";
+%token WHILE "while";
+%token DO "do";
+%token LETVAR "letvar";
+%token IN "in";
 %token <std::string> IDENTIFIER  "identifier";
 %token <uint64_t> NUMBER "number";
+
 %token LEFTPAR "leftpar";
 %token RIGHTPAR "rightpar";
-%token SEMICOLON "semicolon";
 %token COMMA "comma";
+%token END 0 "end of file" // End of File error message (Potentially unused)
 
 %type< EzAquarii::Command > command;
 %type< std::vector<uint64_t> > arguments;
