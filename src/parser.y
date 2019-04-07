@@ -116,19 +116,19 @@ command : STRING LEFTPAR RIGHTPAR
         }
     ;
 
-arguments : NUMBER
+arguments[outer] : NUMBER
         {
             uint64_t number = $NUMBER;
-            $arguments = std::vector<uint64_t>();
-            $arguments.push_back(number);
+            $outer = std::vector<uint64_t>();
+            $outer.push_back(number);
             cout << "first argument: " << number << endl;
         }
-    | arguments COMMA NUMBER
+    | arguments[inner] COMMA NUMBER
         {
             uint64_t number = $NUMBER;
-            std::vector<uint64_t> &args = $1;
+            std::vector<uint64_t> &args = $inner;
             args.push_back(number);
-            $$ = args;
+            $outer = args;
             cout << "next argument: " << number << ", arg list size = " << args.size() << endl;
         }
     ;
