@@ -27,7 +27,7 @@ $(EXECUTABLE): scanner parser $(SRC)/*
 	-o $(EXECUTABLE)
 
 .PHONY: run
-run: $(EXECUTABLE)
+run: $(EXECUTABLE) interclean
 	$(EXECUTABLE)
 
 .PHONY: scanner
