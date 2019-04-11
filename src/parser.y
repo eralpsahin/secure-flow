@@ -68,6 +68,8 @@
 %token DO "do";
 %token LETVAR "letvar";
 %token IN "in";
+%token LBRACES "{";
+%token RBRACES "}";
 %token <std::string> IDENTIFIER  "identifier";
 %token <uint64_t> NUMBER "number";
 
