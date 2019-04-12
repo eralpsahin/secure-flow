@@ -12,7 +12,8 @@ RM         := rm -rf
 CLEAN_LIST := $(INCLUDE)/scanner.cpp\
 					 $(INCLUDE)/parser.cpp $(INCLUDE)/parser.hpp\
 					 $(INCLUDE)/location.hh\
-					 $(INCLUDE)/position.hh $(INCLUDE)/stack.hh
+					 $(INCLUDE)/position.hh $(INCLUDE)/stack.hh\
+					 .vscode/ipch
 
 FILE_LIST := $(SRC)/main.cpp $(SRC)/interpreter.cpp\
 					$(SRC)/command.cpp
