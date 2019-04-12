@@ -78,7 +78,7 @@
 %token COMMA "comma";
 %token END 0 "end of file" // End of File error message (Potentially unused)
 
-%type< EzAquarii::Command > command;
+%type< EzAquarii::Command > command block_command;
 %type< std::vector<uint64_t> > arguments;
 
 %start program
@@ -105,6 +105,13 @@ program :   {
                 driver.AddCommand(cmd);
                 cout << endl << "prompt> ";
             }
+        | program block_command
+            {
+                const Command &cmd = $block_command;
+                cout << "Block command parsed, updating AST" << endl;
+                driver.AddCommand(cmd);
+                cout << endl << "prompt> ";
+            }
         | program SEMICOLON
             {
                 cout << "*** STOP RUN ***" << endl;
@@ -112,6 +119,12 @@ program :   {
             }
         ;
 
+block_command : LBRACES command RBRACES
+            {
+                $block_command = Command("Block"); // TODO: Reword command ID 
+                cout << "Parsed block command" << endl;
+            }
+;
 
 command : IDENTIFIER LEFTPAR RIGHTPAR
         {
