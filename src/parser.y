@@ -185,6 +185,7 @@ expression : IDENTIFIER
 /*
  TODO: add if and let statements
  TODO: Remove template function commands
+ TODO: Add logic
 */
 command : IDENTIFIER LEFTPAR RIGHTPAR
         {
@@ -199,9 +200,24 @@ command : IDENTIFIER LEFTPAR RIGHTPAR
             cout << "function: " << id << ", " << args.size() << endl;
             $command = Command(id, args);
         }
-    | WHILE expression DO block_command // TODO: add logic
+    | WHILE expression DO block_command
         {
             cout << "Parsed while loop" << endl;
+            
+        }
+    | IF expression THEN block_command ELSE block_command // TODO: Refactor else requirement
+        {
+            cout << "Parsed if statement" << endl;
+            
+        }
+    | LETVAR IDENTIFIER ASSIGNMENT expression IN block_command
+        {
+            cout << "Parsed letvar block" << endl;
+            
+        }
+    | expression ASSIGNMENT expression // TODO: Change left expression to identifier/location
+        {
+            cout << "Parsed letvar block" << endl;
             
         }
 ;
