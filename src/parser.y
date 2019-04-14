@@ -106,7 +106,7 @@ program :   {
         | program command
             {
                 const Command &cmd = $command;
-                cout << "command parsed, updating AST" << endl;
+                cout << "Command parsed, updating AST" << endl;
                 driver.AddCommand(cmd);
                 cout << endl << "prompt> ";
             }
@@ -124,8 +124,8 @@ program :   {
             }
         | program expression
             {
-                cout << "*** STOP RUN ***" << endl;
-                cout << driver.ToString() << endl;
+                cout << "Expression parsed" << endl;
+                cout << endl << "prompt> ";
             }
         ;
 
@@ -140,7 +140,7 @@ block_command : LBRACES command RBRACES
  TODO: add locations
  TODO: add semantic logic
 */
-expression : IDENTIFIER
+expression[outer] : IDENTIFIER
         {
 
         }
@@ -148,35 +148,35 @@ expression : IDENTIFIER
         {
             cout << "Parsed number expression" << endl;
         }
-    | expression PLUS IDENTIFIER
+    | expression[inner] PLUS IDENTIFIER
         {
 
         }
-    | expression PLUS NUMBER
+    | expression[inner] PLUS NUMBER
         {
 
         }
-    | expression MINUS IDENTIFIER
+    | expression[inner] MINUS IDENTIFIER
         {
 
         }
-    | expression MINUS NUMBER
+    | expression[inner] MINUS NUMBER
         {
 
         }
-    | expression LESS IDENTIFIER
+    | expression[inner] LESS IDENTIFIER
         {
 
         }
-    | expression LESS NUMBER
+    | expression[inner] LESS NUMBER
         {
 
         }
-    | expression EQUAL IDENTIFIER
+    | expression[inner] EQUAL IDENTIFIER
         {
 
         }
-    | expression EQUAL NUMBER
+    | expression[inner] EQUAL NUMBER
         {
 
         }
@@ -205,7 +205,7 @@ command : IDENTIFIER LEFTPAR RIGHTPAR
             cout << "Parsed while loop" << endl;
             
         }
-    | IF expression THEN block_command ELSE block_command // TODO: Refactor else requirement
+    | IF expression THEN block_command[then] ELSE block_command[else] // TODO: Refactor else requirement
         {
             cout << "Parsed if statement" << endl;
             
@@ -215,7 +215,7 @@ command : IDENTIFIER LEFTPAR RIGHTPAR
             cout << "Parsed letvar block" << endl;
             
         }
-    | expression ASSIGNMENT expression // TODO: Change left expression to identifier/location
+    | expression[lhs] ASSIGNMENT expression[rhs] // TODO: Change left expression to identifier/location
         {
             cout << "Parsed letvar block" << endl;
             
