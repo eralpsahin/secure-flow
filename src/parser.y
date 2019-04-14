@@ -70,6 +70,11 @@
 %token IN "in";
 %token LBRACES "{";
 %token RBRACES "}";
+%token PLUS "+";
+%token MINUS "-";
+%token LESS "<";
+%token EQUAL "=";
+%token ASSIGNMENT ":=";
 %token <std::string> IDENTIFIER  "identifier";
 %token <uint64_t> NUMBER "number";
 
@@ -117,6 +122,11 @@ program :   {
                 cout << "*** STOP RUN ***" << endl;
                 cout << driver.ToString() << endl;
             }
+        | program expression
+            {
+                cout << "*** STOP RUN ***" << endl;
+                cout << driver.ToString() << endl;
+            }
         ;
 
 block_command : LBRACES command RBRACES
@@ -124,6 +134,52 @@ block_command : LBRACES command RBRACES
                 $block_command = Command("Block"); // TODO: Reword command ID 
                 cout << "Parsed block command" << endl;
             }
+;
+
+/*
+ TODO: add locations
+ TODO: add semantic logic
+*/
+expression : IDENTIFIER
+        {
+
+        }
+    | NUMBER
+        {
+            cout << "Parsed number expression" << endl;
+        }
+    | expression PLUS IDENTIFIER
+        {
+
+        }
+    | expression PLUS NUMBER
+        {
+
+        }
+    | expression MINUS IDENTIFIER
+        {
+
+        }
+    | expression MINUS NUMBER
+        {
+
+        }
+    | expression LESS IDENTIFIER
+        {
+
+        }
+    | expression LESS NUMBER
+        {
+
+        }
+    | expression EQUAL IDENTIFIER
+        {
+
+        }
+    | expression EQUAL NUMBER
+        {
+
+        }
 ;
 
 command : IDENTIFIER LEFTPAR RIGHTPAR
@@ -139,7 +195,7 @@ command : IDENTIFIER LEFTPAR RIGHTPAR
             cout << "function: " << id << ", " << args.size() << endl;
             $command = Command(id, args);
         }
-    ;
+;
 
 arguments[outer] : NUMBER
         {
@@ -156,7 +212,7 @@ arguments[outer] : NUMBER
             $outer = args;
             cout << "next argument: " << number << ", arg list size = " << args.size() << endl;
         }
-    ;
+;
     
 %%
 

@@ -74,6 +74,31 @@
   return EzAquarii::Parser::make_SEMICOLON(EzAquarii::location());
 }
 
+":=" { // Assignment symbol  used in e := e'
+  cout << "Scanner: ':='" << endl;
+  return EzAquarii::Parser::make_ASSIGNMENT(EzAquarii::location());
+}
+
+"=" { // Equality symbol used in e = e'
+  cout << "Scanner: '='" << endl;
+  return EzAquarii::Parser::make_EQUAL(EzAquarii::location());
+}
+
+"+" { // Addition symbol used in e + e'
+  cout << "Scanner: '+'" << endl;
+  return EzAquarii::Parser::make_PLUS(EzAquarii::location());
+}
+
+"-" { // Subtraction symbol used in e - e'
+  cout << "Scanner: '-'" << endl;
+  return EzAquarii::Parser::make_MINUS(EzAquarii::location());
+}
+
+"<" { // Less than symbol used in e < e'
+  cout << "Scanner: '<'" << endl;
+  return EzAquarii::Parser::make_LESS(EzAquarii::location());
+}
+
 "{" { // SEMICOLON used in c;c'
   cout << "Scanner: '{'" << endl;
   return EzAquarii::Parser::make_LBRACES(EzAquarii::location());
