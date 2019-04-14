@@ -182,6 +182,10 @@ expression : IDENTIFIER
         }
 ;
 
+/*
+ TODO: add if and let statements
+ TODO: Remove template function commands
+*/
 command : IDENTIFIER LEFTPAR RIGHTPAR
         {
             string &id = $IDENTIFIER;
@@ -194,6 +198,11 @@ command : IDENTIFIER LEFTPAR RIGHTPAR
             const std::vector<uint64_t> &args = $arguments;
             cout << "function: " << id << ", " << args.size() << endl;
             $command = Command(id, args);
+        }
+    | WHILE expression DO block_command // TODO: add logic
+        {
+            cout << "Parsed while loop" << endl;
+            
         }
 ;
 
