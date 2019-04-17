@@ -85,49 +85,37 @@
 
 %type< EzAquarii::Command > command block_command;
 %type< std::vector<uint64_t> > arguments;
-
+%type< int > expression;
 %start program
 
 %%
 
 program :   {
                 cout << "*** RUN ***" << endl;
-                cout << "Type function with list of parmeters. Parameter list can be empty" << endl
-                     << "or contain positive integers only. Examples: " << endl
-                     << " * function()" << endl
-                     << " * function(1,2,3)" << endl
-                     << "Terminate listing with ; to see parsed AST" << endl
-                     << "Terminate parser with Ctrl-D" << endl;
-                
                 cout << endl << "prompt> ";
                 
                 driver.Clear();
             }
-        | program command
+        | program command SEMICOLON
             {
                 const Command &cmd = $command;
                 cout << "Command parsed, updating AST" << endl;
                 driver.AddCommand(cmd);
                 cout << endl << "prompt> ";
             }
-        | program block_command
+        | program block_command SEMICOLON
             {
                 const Command &cmd = $block_command;
                 cout << "Block command parsed, updating AST" << endl;
                 driver.AddCommand(cmd);
                 cout << endl << "prompt> ";
             }
-        | program SEMICOLON
+        | program expression SEMICOLON
             {
-                cout << "*** STOP RUN ***" << endl;
-                cout << driver.ToString() << endl;
-            }
-        | program expression
-            {
-                cout << "Expression parsed" << endl;
+                cout << "Expression parsed: " << $expression << endl;
                 cout << endl << "prompt> ";
             }
-        ;
+;
 
 block_command : LBRACES command RBRACES
             {
@@ -146,15 +134,15 @@ expression[outer] : IDENTIFIER
         }
     | NUMBER
         {
-            cout << "Parsed number expression" << endl;
+            $outer = $NUMBER;
         }
     | expression[inner] PLUS IDENTIFIER
         {
-
+           
         }
     | expression[inner] PLUS NUMBER
         {
-
+            $outer = $inner + $NUMBER;
         }
     | expression[inner] MINUS IDENTIFIER
         {
@@ -162,7 +150,7 @@ expression[outer] : IDENTIFIER
         }
     | expression[inner] MINUS NUMBER
         {
-
+            $outer = $inner - $NUMBER;
         }
     | expression[inner] LESS IDENTIFIER
         {
@@ -170,7 +158,7 @@ expression[outer] : IDENTIFIER
         }
     | expression[inner] LESS NUMBER
         {
-
+            $outer = $inner < int($NUMBER);
         }
     | expression[inner] EQUAL IDENTIFIER
         {
@@ -178,7 +166,9 @@ expression[outer] : IDENTIFIER
         }
     | expression[inner] EQUAL NUMBER
         {
-
+            cout << $inner<<endl;
+            cout << int($NUMBER)<<endl;
+            $outer = $inner == int($NUMBER);
         }
 ;
 
