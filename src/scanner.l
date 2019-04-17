@@ -110,13 +110,13 @@
 }
 
 [_a-zA-Z][_a-zA-Z0-9]* { // IDENTIFIER used in expressions
-  cout << "Scanner: identifier [" << yytext << "]" << endl;
+  cout << "Scanner: [" << yytext << "]" << endl;
   return EzAquarii::Parser::make_IDENTIFIER(yytext, EzAquarii::location( /* put location data here if you want */ )); 
 }
 
 -?[0-9]* { // NUMBER integer literal
-  cout << "Scanner: decimal number: " << yytext << endl;
-  uint64_t number = strtoull(yytext, 0, 10);
+  cout << "Scanner: " << yytext << endl;
+  int number = strtoull(yytext, 0, 10);
   return EzAquarii::Parser::make_NUMBER(number, EzAquarii::location());
 }
 
