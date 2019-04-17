@@ -32,7 +32,8 @@ void Interpreter::AddCommand(const Command &cmd) { m_commands_.push_back(cmd); }
 
 void Interpreter::IncreaseLocation(unsigned int loc) {
   m_location_ += loc;
-  cout << "increaseLocation(): " << loc << ", total = " << m_location_ << endl;
+  // ? When to use location?
+  // cout << "increaseLocation(): " << loc << ", total = " << m_location_ << endl;
 }
 
 unsigned int Interpreter::GetLocation() const { return m_location_; }
