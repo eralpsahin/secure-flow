@@ -99,12 +99,12 @@
   return EzAquarii::Parser::make_LESS(EzAquarii::location());
 }
 
-"{" { // SEMICOLON used in c;c'
+"{" { // Braces used in block_command'
   cout << "Scanner: '{'" << endl;
   return EzAquarii::Parser::make_LBRACES(EzAquarii::location());
 }
 
-"}" { // SEMICOLON used in c;c'
+"}" { // Braces used in block_command'
   cout << "Scanner: '}'" << endl;
   return EzAquarii::Parser::make_RBRACES(EzAquarii::location());
 }
