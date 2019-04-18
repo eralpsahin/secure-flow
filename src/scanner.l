@@ -99,14 +99,29 @@
   return EzAquarii::Parser::make_LESS(EzAquarii::location());
 }
 
-"{" { // Braces used in block_command'
+"{" { // Braces used in block_command
   cout << "Scanner: '{'" << endl;
   return EzAquarii::Parser::make_LBRACES(EzAquarii::location());
 }
 
-"}" { // Braces used in block_command'
+"}" { // Braces used in block_command
   cout << "Scanner: '}'" << endl;
   return EzAquarii::Parser::make_RBRACES(EzAquarii::location());
+}
+
+"[" { // Bracket used for security level definition
+  cout << "Scanner: '['" << endl;
+  return EzAquarii::Parser::make_LBRACKET(EzAquarii::location());
+}
+
+"]" { // Bracket used for security level definition
+  cout << "Scanner: ']'" << endl;
+  return EzAquarii::Parser::make_RBRACKET(EzAquarii::location());
+}
+
+[HL] { // LEVEL used in variable declaration
+  cout << "Scanner: [" << yytext << "]" << endl;
+  return EzAquarii::Parser::make_LEVEL(yytext, EzAquarii::location( /* put location data here if you want */ )); 
 }
 
 [_a-zA-Z][_a-zA-Z0-9]* { // IDENTIFIER used in expressions

@@ -70,12 +70,15 @@
 %token IN "in";
 %token LBRACES "{";
 %token RBRACES "}";
+%token LBRACKET "[";
+%token RBRACKET "]";
 %token PLUS "+";
 %token MINUS "-";
 %token LESS "<";
 %token EQUAL "=";
 %token ASSIGNMENT ":=";
 %token <std::string> IDENTIFIER  "identifier";
+%token <std::string> LEVEL  "level";
 %token <uint64_t> NUMBER "number";
 
 %token LEFTPAR "leftpar";
@@ -200,7 +203,7 @@ command : IDENTIFIER LEFTPAR RIGHTPAR
             cout << "Parsed if statement" << endl;
             
         }
-    | LETVAR IDENTIFIER ASSIGNMENT expression IN block_command
+    | LETVAR IDENTIFIER LBRACKET LEVEL RBRACKET ASSIGNMENT expression IN block_command
         {
             cout << "Parsed letvar block" << endl;
             
