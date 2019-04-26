@@ -27,8 +27,8 @@ class Type {
 
   Type() {}
 
-  SecurityLevel getType() const { return level_; }
-  std::string getIdentifier() const { return identifier_; }
+  SecurityLevel GetType() const { return level_; }
+  std::string GetIdentifier() const { return identifier_; }
 
   std::string ToString() { return identifier_ + std::to_string(level_); }
 

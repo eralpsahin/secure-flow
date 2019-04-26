@@ -49,7 +49,7 @@
     std::vector<EzAquarii::Type> locals;
     Type find(std::vector<Type> &locals, std::string identifier) {
         for (size_t i = locals.size() - 1; i >= 0; i--) {
-            if (locals[i].getIdentifier() == identifier)
+            if (locals[i].GetIdentifier() == identifier)
             return locals[i];
         }
         std::cout << identifier << " is not declared \n";
@@ -191,30 +191,34 @@ expression[outer] : IDENTIFIER
 */
 command : WHILE expression DO block_command
         {
-            if ($expression.getType() > $block_command.getType()) {
+            if ($expression.GetType() > $block_command.GetType()) {
                 cout << "Implicit unallowed flow" << endl;
                 exit(0);
             }
+            $command = $block_command;
             cout << "Parsed while loop" << endl;
         }
     | IF expression THEN block_command[then] ELSE block_command[else] // TODO: Refactor else requirement
         {
-            if ($expression.getType() > $then.getType() || $expression.getType() > $else.getType()) {
+            if ($expression.GetType() > $then.GetType() || $expression.GetType() > $else.GetType()) {
                 cout << "Implicit unallowed flow" << endl;
                 exit(0);
             }
-            $command = $expression;
+            if ($then.GetType() == low || $else.GetType() == low)
+                $command = Type("","L");
+            else 
+                $command = Type("","H");
+
             cout << "Parsed if statement" << endl;
         }
     | LETVAR IDENTIFIER LBRACKET LEVEL RBRACKET { locals.push_back(Type($IDENTIFIER, $LEVEL)); } ASSIGNMENT expression IN block_command
         {
-            
             locals.pop_back(); // Remove the declared variable
         }
     | IDENTIFIER ASSIGNMENT expression[rhs]
         {
             Type id = find(locals,$IDENTIFIER);
-            if (id.getType() < $rhs.getType()) { // low identifier high expression
+            if (id.GetType() < $rhs.GetType()) { // low identifier high expression
                 cout << "Explicit unallowed flow" << endl;
                 exit(0);
             }

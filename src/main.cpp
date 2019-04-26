@@ -9,6 +9,5 @@ using namespace std;
 int main() {
   Interpreter i;
   int res = i.Parse();
-  cout << "Parse complete. Result = " << res << endl;
   return res;
 }
