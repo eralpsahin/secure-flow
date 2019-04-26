@@ -35,122 +35,166 @@
 %%
 
 "letvar" { // LETVAR keyword for local variable declaration
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: 'letvar'" << endl;
+#endif
   return EzAquarii::Parser::make_LETVAR(EzAquarii::location());
 }
 
 "in" { // IN keyword for local variable declarations
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: 'in'" << endl;
+#endif
+
   return EzAquarii::Parser::make_IN(EzAquarii::location());
 }
 
 "if" { // IF keyword for conditionals
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: 'if'" << endl;
+#endif
+
   return EzAquarii::Parser::make_IF(EzAquarii::location());
 }
 
 "then" { // THEN keyword for conditionals
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: 'then'" << endl;
+#endif
+
   return EzAquarii::Parser::make_THEN(EzAquarii::location());
 }
 
 "else" { // ELSE keyword for conditionals
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: 'else'" << endl;
+#endif
+
   return EzAquarii::Parser::make_ELSE(EzAquarii::location());
 }
 
 "while" { // WHILE keyword for loops
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: 'while'" << endl;
+#endif
+
   return EzAquarii::Parser::make_WHILE(EzAquarii::location());
 }
 
 "do" { // DO keyword for loops
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: 'do'" << endl;
+#endif
+
   return EzAquarii::Parser::make_DO(EzAquarii::location());
 }
             
 ";" { // SEMICOLON used in c;c'
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: ';'" << endl;
+#endif
+
   return EzAquarii::Parser::make_SEMICOLON(EzAquarii::location());
 }
 
 ":=" { // Assignment symbol  used in e := e'
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: ':='" << endl;
+#endif
+
   return EzAquarii::Parser::make_ASSIGNMENT(EzAquarii::location());
 }
 
 "=" { // Equality symbol used in e = e'
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: '='" << endl;
+#endif
+
   return EzAquarii::Parser::make_EQUAL(EzAquarii::location());
 }
 
 "+" { // Addition symbol used in e + e'
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: '+'" << endl;
+#endif
+
   return EzAquarii::Parser::make_PLUS(EzAquarii::location());
 }
 
 "-" { // Subtraction symbol used in e - e'
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: '-'" << endl;
+#endif
+
   return EzAquarii::Parser::make_MINUS(EzAquarii::location());
 }
 
 "<" { // Less than symbol used in e < e'
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: '<'" << endl;
+#endif
+
   return EzAquarii::Parser::make_LESS(EzAquarii::location());
 }
 
 "{" { // Braces used in block_command
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: '{'" << endl;
+#endif
+
   return EzAquarii::Parser::make_LBRACES(EzAquarii::location());
 }
 
 "}" { // Braces used in block_command
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: '}'" << endl;
+#endif
+
   return EzAquarii::Parser::make_RBRACES(EzAquarii::location());
 }
 
 "[" { // Bracket used for security level definition
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: '['" << endl;
+#endif
+
   return EzAquarii::Parser::make_LBRACKET(EzAquarii::location());
 }
 
 "]" { // Bracket used for security level definition
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: ']'" << endl;
+#endif
+
   return EzAquarii::Parser::make_RBRACKET(EzAquarii::location());
 }
 
 [HL] { // LEVEL used in variable declaration
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: [" << yytext << "]" << endl;
+#endif
+
   return EzAquarii::Parser::make_LEVEL(yytext, EzAquarii::location( /* put location data here if you want */ )); 
 }
 
 [_a-zA-Z][_a-zA-Z0-9]* { // IDENTIFIER used in expressions
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: [" << yytext << "]" << endl;
+#endif
+
   return EzAquarii::Parser::make_IDENTIFIER(yytext, EzAquarii::location( /* put location data here if you want */ )); 
 }
 
 -?[0-9]* { // NUMBER integer literal
+#ifdef SCANNER_OUTPUT
   cout << "Scanner: " << yytext << endl;
+#endif
+
   int number = strtoull(yytext, 0, 10);
   return EzAquarii::Parser::make_NUMBER(number, EzAquarii::location());
 }
 
 [\n\t ] {}
-
-"," { // TODO: remove from the language
-  cout << "Scanner: ','" << endl;
-  return EzAquarii::Parser::make_COMMA(EzAquarii::location());
-}
-            
-"(" { // TODO: remove from the language
-  cout << "Scanner: '('" << endl;
-  return EzAquarii::Parser::make_LEFTPAR(EzAquarii::location());
-}
-            
-")" { // TODO: remove from the language
-  cout << "Scanner: ')'" << endl;
-  return EzAquarii::Parser::make_RIGHTPAR(EzAquarii::location());
-}
 
 . { 
   cout << "Scanner: unknown character [" << yytext << "]" << endl; 
