@@ -7,6 +7,38 @@
 
 namespace EzAquarii {
 
+enum SecurityLevel { low, high };
+
+class Type {
+ public:
+  Type(std::string identifier, std::string type) : identifier_(identifier) {
+    if (type == "H")
+      level_ = high;
+    else
+      level_ = low;
+  }
+
+  static Type Coercion(const Type &lhs, const Type &rhs) {
+    if (lhs.level_ == high || rhs.level_ == high)
+      return Type("", "H");
+    else
+      return Type("", "L");
+  }
+
+  Type() {}
+
+  SecurityLevel getType() const { return level_; }
+  std::string getIdentifier() const { return identifier_; }
+
+  std::string ToString() { return identifier_ + std::to_string(level_); }
+
+ private:
+  SecurityLevel level_;
+  std::string identifier_;
+};
+
+
+
 /**
  * AST node. If you can call it AST at all...
  * It keeps function name and a list of arguments.
