@@ -130,8 +130,6 @@ program :   {
 block_command : LBRACES command RBRACES
             {
                 $block_command = $command;
-                //$block_command = Command("Block"); // TODO: Reword command ID 
-                cout << "Parsed block command" << endl;
             }
             
 ;
@@ -143,58 +141,46 @@ block_command : LBRACES command RBRACES
 expression[outer] : IDENTIFIER
         {
             $outer = find(locals,$IDENTIFIER);
-            cout<<"OUTER:" << $outer.ToString() << endl;
         }
     | NUMBER
         {
             $outer = Type("","L"); // literals are low level
-            cout << "OUTER:" << $outer.ToString() << endl;
         }
     | expression[inner] PLUS IDENTIFIER
         {
            Type id = find(locals,$IDENTIFIER);
            $outer = Type::Coercion($inner,id);
-            cout<<"OUTER:" << $outer.ToString() << endl;
         }
     | expression[inner] PLUS NUMBER
         {
             $outer = Type::Coercion($inner,Type("","L"));
-            cout<<"OUTER:" << $outer.ToString() << endl;
         }
     | expression[inner] MINUS IDENTIFIER
         {
             Type id = find(locals,$IDENTIFIER);
             $outer = Type::Coercion($inner,id);
-
-            cout<<"OUTER:" << $outer.ToString() << endl;
         }
     | expression[inner] MINUS NUMBER
         {
             $outer = Type::Coercion($inner,Type("","L"));
-            cout<<"OUTER:" << $outer.ToString() << endl;
         }
     | expression[inner] LESS IDENTIFIER
         {
             Type id = find(locals,$IDENTIFIER);
             $outer = Type::Coercion($inner,id);
-            cout<<"OUTER:" << $outer.ToString() << endl;
-
         }
     | expression[inner] LESS NUMBER
         {
             $outer = Type::Coercion($inner,Type("","L"));
-            cout<<"OUTER:" << $outer.ToString() << endl;
         }
     | expression[inner] EQUAL IDENTIFIER
         {
             Type id = find(locals,$IDENTIFIER);
             $outer = Type::Coercion($inner,id);
-            cout<<"OUTER:" << $outer.ToString() << endl;
         }
     | expression[inner] EQUAL NUMBER
         {
             $outer = Type::Coercion($inner,Type("","L"));
-            cout<<"OUTER:" << $outer.ToString() << endl;
         }
 ;
 
