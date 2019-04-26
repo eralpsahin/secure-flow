@@ -205,10 +205,19 @@ expression[outer] : IDENTIFIER
 */
 command : WHILE expression DO block_command
         {
+            if ($expression.getType() > $block_command.getType()) {
+                cout << "Implicit unallowed flow" << endl;
+                exit(0);
+            }
             cout << "Parsed while loop" << endl;
         }
     | IF expression THEN block_command[then] ELSE block_command[else] // TODO: Refactor else requirement
         {
+            if ($expression.getType() > $then.getType() || $expression.getType() > $else.getType()) {
+                cout << "Implicit unallowed flow" << endl;
+                exit(0);
+            }
+            $command = $expression;
             cout << "Parsed if statement" << endl;
         }
     | LETVAR IDENTIFIER LBRACKET LEVEL RBRACKET { locals.push_back(Type($IDENTIFIER, $LEVEL)); } ASSIGNMENT expression IN block_command
@@ -220,7 +229,7 @@ command : WHILE expression DO block_command
         {
             Type id = find(locals,$IDENTIFIER);
             if (id.getType() < $rhs.getType()) { // low identifier high expression
-                cout << " Security is leaked " << endl;
+                cout << "Explicit unallowed flow" << endl;
                 exit(0);
             }
             $command = id;
