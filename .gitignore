@@ -14,3 +14,7 @@ parser.hpp
 position.hh
 scanner.cpp
 stack.hh
+
+# test files
+
+*.code
