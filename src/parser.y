@@ -129,6 +129,7 @@ program :   {
 ;
 block_command : LBRACES command RBRACES
             {
+                $block_command = $command;
                 //$block_command = Command("Block"); // TODO: Reword command ID 
                 cout << "Parsed block command" << endl;
             }
@@ -212,15 +213,17 @@ command : WHILE expression DO block_command
         }
     | LETVAR IDENTIFIER LBRACKET LEVEL RBRACKET { locals.push_back(Type($IDENTIFIER, $LEVEL)); } ASSIGNMENT expression IN block_command
         {
-            // cout << "New variable " << $IDENTIFIER << "[" << $LEVEL << "]" << endl;
+            
             locals.pop_back(); // Remove the declared variable
         }
-    | IDENTIFIER ASSIGNMENT expression[rhs] // TODO: Change left expression to identifier/location
+    | IDENTIFIER ASSIGNMENT expression[rhs]
         {
-            for(size_t i = 0; i < locals.size(); i++) {
-                cout << locals[i].ToString();
+            Type id = find(locals,$IDENTIFIER);
+            if (id.getType() < $rhs.getType()) { // low identifier high expression
+                cout << " Security is leaked " << endl;
+                exit(0);
             }
-            cout << endl;
+            $command = id;
             cout << "Parsed assignment expression" << endl;
             
         }
