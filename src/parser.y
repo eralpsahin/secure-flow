@@ -45,8 +45,17 @@
     // you can accomplish the same thing by inlining the code using preprocessor
     // x and y are same as in above static function
     // #define yylex(x, y) scanner.get_next_token()
-    
     using namespace EzAquarii;
+    std::vector<EzAquarii::Type> locals;
+    Type find(std::vector<Type> &locals, std::string identifier) {
+        for (size_t i = locals.size() - 1; i >= 0; i--) {
+            if (locals[i].getIdentifier() == identifier)
+            return locals[i];
+        }
+        std::cout << identifier << " is not declared \n";
+        exit(0); 
+    }  
+    
 }
 
 %lex-param { EzAquarii::Scanner &scanner }
@@ -86,9 +95,8 @@
 %token COMMA "comma";
 %token END 0 "end of file" // End of File error message (Potentially unused)
 
-%type< EzAquarii::Command > command block_command;
-%type< std::vector<uint64_t> > arguments;
-%type< int > expression;
+%type< Type > command block_command;
+%type< Type > expression;
 %start program
 
 %%
@@ -101,30 +109,30 @@ program :   {
             }
         | program command SEMICOLON
             {
-                const Command &cmd = $command;
+                //const Command &cmd = $command;
                 cout << "Command parsed, updating AST" << endl;
-                driver.AddCommand(cmd);
+                //driver.AddCommand(cmd);
                 cout << endl << "prompt> ";
             }
         | program block_command SEMICOLON
             {
-                const Command &cmd = $block_command;
+                //const Command &cmd = $block_command;
                 cout << "Block command parsed, updating AST" << endl;
-                driver.AddCommand(cmd);
+                //driver.AddCommand(cmd);
                 cout << endl << "prompt> ";
             }
         | program expression SEMICOLON
             {
-                cout << "Expression parsed: " << $expression << endl;
+                //cout << "Expression parsed: " << $expression << endl;
                 cout << endl << "prompt> ";
             }
 ;
-
 block_command : LBRACES command RBRACES
             {
-                $block_command = Command("Block"); // TODO: Reword command ID 
+                //$block_command = Command("Block"); // TODO: Reword command ID 
                 cout << "Parsed block command" << endl;
             }
+            
 ;
 
 /*
@@ -133,45 +141,59 @@ block_command : LBRACES command RBRACES
 */
 expression[outer] : IDENTIFIER
         {
-
+            $outer = find(locals,$IDENTIFIER);
+            cout<<"OUTER:" << $outer.ToString() << endl;
         }
     | NUMBER
         {
-            $outer = $NUMBER;
+            $outer = Type("","L"); // literals are low level
+            cout << "OUTER:" << $outer.ToString() << endl;
         }
     | expression[inner] PLUS IDENTIFIER
         {
-           
+           Type id = find(locals,$IDENTIFIER);
+           $outer = Type::Coercion($inner,id);
+            cout<<"OUTER:" << $outer.ToString() << endl;
         }
     | expression[inner] PLUS NUMBER
         {
-            $outer = $inner + $NUMBER;
+            $outer = Type::Coercion($inner,Type("","L"));
+            cout<<"OUTER:" << $outer.ToString() << endl;
         }
     | expression[inner] MINUS IDENTIFIER
         {
+            Type id = find(locals,$IDENTIFIER);
+            $outer = Type::Coercion($inner,id);
 
+            cout<<"OUTER:" << $outer.ToString() << endl;
         }
     | expression[inner] MINUS NUMBER
         {
-            $outer = $inner - $NUMBER;
+            $outer = Type::Coercion($inner,Type("","L"));
+            cout<<"OUTER:" << $outer.ToString() << endl;
         }
     | expression[inner] LESS IDENTIFIER
         {
+            Type id = find(locals,$IDENTIFIER);
+            $outer = Type::Coercion($inner,id);
+            cout<<"OUTER:" << $outer.ToString() << endl;
 
         }
     | expression[inner] LESS NUMBER
         {
-            $outer = $inner < int($NUMBER);
+            $outer = Type::Coercion($inner,Type("","L"));
+            cout<<"OUTER:" << $outer.ToString() << endl;
         }
     | expression[inner] EQUAL IDENTIFIER
         {
-
+            Type id = find(locals,$IDENTIFIER);
+            $outer = Type::Coercion($inner,id);
+            cout<<"OUTER:" << $outer.ToString() << endl;
         }
     | expression[inner] EQUAL NUMBER
         {
-            cout << $inner<<endl;
-            cout << int($NUMBER)<<endl;
-            $outer = $inner == int($NUMBER);
+            $outer = Type::Coercion($inner,Type("","L"));
+            cout<<"OUTER:" << $outer.ToString() << endl;
         }
 ;
 
@@ -180,58 +202,29 @@ expression[outer] : IDENTIFIER
  TODO: Remove template function commands
  TODO: Add logic
 */
-command : IDENTIFIER LEFTPAR RIGHTPAR
-        {
-            string &id = $IDENTIFIER;
-            cout << "ID: " << id << endl;
-            $command = Command(id);
-        }
-    | IDENTIFIER LEFTPAR arguments RIGHTPAR
-        {
-            string &id = $IDENTIFIER;
-            const std::vector<uint64_t> &args = $arguments;
-            cout << "function: " << id << ", " << args.size() << endl;
-            $command = Command(id, args);
-        }
-    | WHILE expression DO block_command
+command : WHILE expression DO block_command
         {
             cout << "Parsed while loop" << endl;
-            
         }
     | IF expression THEN block_command[then] ELSE block_command[else] // TODO: Refactor else requirement
         {
             cout << "Parsed if statement" << endl;
-            
         }
-    | LETVAR IDENTIFIER LBRACKET LEVEL RBRACKET ASSIGNMENT expression IN block_command
+    | LETVAR IDENTIFIER LBRACKET LEVEL RBRACKET { locals.push_back(Type($IDENTIFIER, $LEVEL)); } ASSIGNMENT expression IN block_command
         {
-            cout << "Parsed letvar block" << endl;
-            
+            // cout << "New variable " << $IDENTIFIER << "[" << $LEVEL << "]" << endl;
+            locals.pop_back(); // Remove the declared variable
         }
-    | expression[lhs] ASSIGNMENT expression[rhs] // TODO: Change left expression to identifier/location
+    | IDENTIFIER ASSIGNMENT expression[rhs] // TODO: Change left expression to identifier/location
         {
-            cout << "Parsed letvar block" << endl;
+            for(size_t i = 0; i < locals.size(); i++) {
+                cout << locals[i].ToString();
+            }
+            cout << endl;
+            cout << "Parsed assignment expression" << endl;
             
         }
 ;
-
-arguments[outer] : NUMBER
-        {
-            uint64_t number = $NUMBER;
-            $outer = std::vector<uint64_t>();
-            $outer.push_back(number);
-            cout << "first argument: " << number << endl;
-        }
-    | arguments[inner] COMMA NUMBER
-        {
-            uint64_t number = $NUMBER;
-            std::vector<uint64_t> &args = $inner;
-            args.push_back(number);
-            $outer = args;
-            cout << "next argument: " << number << ", arg list size = " << args.size() << endl;
-        }
-;
-    
 %%
 
 // Bison expects us to provide implementation - otherwise linker complains
