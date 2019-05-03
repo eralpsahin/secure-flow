@@ -1,5 +1,6 @@
 CC       := g++
 CC_FLAGS := -Wall -Wextra -g
+BISON_PATH := bison
 
 BUILD	  := build
 INCLUDE	:= include
@@ -38,7 +39,7 @@ scanner: $(SRC)/scanner.l
 
 .PHONY: parser
 parser: $(SRC)/parser.y
-	bison -o include/parser.cpp $(SRC)/parser.y
+	${BISON_PATH} -o include/parser.cpp $(SRC)/parser.y
 
 .PHONY: interclean
 interclean:
