@@ -8,7 +8,7 @@
 namespace EzAquarii {
 
 enum SecurityLevel { low, high };
-
+static const std::string enumNames[2] = {"low", "high"};
 class Type {
  public:
   Type(std::string identifier, std::string type) : identifier_(identifier) {
@@ -30,7 +30,7 @@ class Type {
   SecurityLevel GetType() const { return level_; }
   std::string GetIdentifier() const { return identifier_; }
 
-  std::string ToString() { return identifier_ + std::to_string(level_); }
+  std::string ToString() { return identifier_ + enumNames[level_]; }
 
  private:
   SecurityLevel level_;
