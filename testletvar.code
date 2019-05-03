@@ -1,0 +1,10 @@
+letvar x [L] := 20 in {
+  letvar y [H] := 10 in {
+    y := x
+  }
+};
+letvar x [L] := 20 in {
+  letvar y [H] := 10 in {
+    x := y /* Here low variable has a flow from high variable */
+  }
+};

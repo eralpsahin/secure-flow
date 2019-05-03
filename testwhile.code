@@ -1,0 +1,16 @@
+letvar l [L] := 1 in {
+  letvar h [H] := 2 in {
+    
+    while h + 10 do {
+      h := 15
+    }
+  }
+};
+letvar l [L] := 1 in {
+  letvar h [H] := 2 in {
+    
+    while h + 10 do {
+      l := 15 /* Low variable has a flow from high conditional expression */
+    }
+  }
+};

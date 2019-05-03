@@ -1,0 +1,47 @@
+letvar l [L] := 1 in {
+  letvar h [H] := 2 in {
+    
+    if l + 10 then {
+      l := 15
+    } else {
+      h := 15
+    }
+  }
+};
+letvar l [L] := 1 in {
+  letvar h [H] := 2 in {
+    
+    if l + 10 then {
+      l := 15
+    } else {
+      l := 15
+    }
+  }
+};
+letvar l [L] := 1 in {
+  letvar h [H] := 2 in {
+    
+    if h + 10 then {
+      h := 15
+    } else {
+      h := 15
+    }
+  }
+};
+letvar l [L] := 1 in {
+
+  letvar h [H] := 2 in {
+    if h + 10 then {
+      h := 15;
+      letvar l1 [L] := 5 in { /* low letvar declaration secure */
+        h := 20 /* because the assignment inside is not a problem */
+      }
+    } else {
+      letvar l2 [L] := 10 in {
+         while l + 10 do { 
+          l := 15 /* low level assignment causes unsecure flow here */
+      }
+      }
+    }
+  }
+};
