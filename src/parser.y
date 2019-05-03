@@ -96,6 +96,7 @@
 %token END 0 "end of file" // End of File error message (Potentially unused)
 
 %type< Type > command block_command;
+%type< Type > more_commands;
 %type< Type > expression;
 %start program
 
@@ -127,17 +128,23 @@ program :   {
                 cout << endl << "prompt> ";
             }
 ;
-block_command : LBRACES command RBRACES
+block_command : LBRACES more_commands RBRACES
             {
-                $block_command = $command;
+                $block_command = $more_commands;
             }
             
 ;
+more_commands[outer] : command
+            {
+                $outer = $command;
+            }
+        | command SEMICOLON more_commands[inner]
+            {
+                //TODO: type inference on multiple commands
+                $outer = $command;
+            }        
+;
 
-/*
- TODO: add locations
- TODO: add semantic logic
-*/
 expression[outer] : IDENTIFIER
         {
             $outer = find(locals,$IDENTIFIER);
@@ -184,11 +191,6 @@ expression[outer] : IDENTIFIER
         }
 ;
 
-/*
- TODO: add if and let statements
- TODO: Remove template function commands
- TODO: Add logic
-*/
 command : WHILE expression DO block_command
         {
             if ($expression.GetType() > $block_command.GetType()) {
