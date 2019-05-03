@@ -43,8 +43,16 @@ parser: $(SRC)/parser.y
 
 .PHONY: interclean
 interclean:
-	$(RM) $(DSYM) $(CLEAN_LIST)
+	$(RM) $(DSYM) $(CLEAN_LIST) output
+
+.PHONY: test
+test: $(EXECUTABLE) interclean
+	mkdir output
+	$(EXECUTABLE) < testif.code > output/if.out
+	$(EXECUTABLE) < testwhile.code > output/while.out
+	$(EXECUTABLE) < testletvar.code > output/letvar.out
+
 
 .PHONY: clean
 clean:
-	$(RM) $(EXECUTABLE) $(DSYM) $(CLEAN_LIST)
+	$(RM) $(EXECUTABLE) $(DSYM) $(CLEAN_LIST) output
