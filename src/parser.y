@@ -54,8 +54,7 @@
         }
         std::cout << identifier << " is not declared \n";
         exit(0); 
-    }  
-    
+    }
 }
 
 %lex-param { EzAquarii::Scanner &scanner }
@@ -140,8 +139,10 @@ more_commands[outer] : command
             }
         | command SEMICOLON more_commands[inner]
             {
-                //TODO: type inference on multiple commands
-                $outer = $command;
+                if ($command.GetType() == low || $inner.GetType() == low)
+                    $outer = Type(low);
+                else
+                    $outer = Type(high);
             }        
 ;
 
@@ -151,7 +152,7 @@ expression[outer] : IDENTIFIER
         }
     | NUMBER
         {
-            $outer = Type("","L"); // literals are low level
+            $outer = Type(low); // literals are low level
         }
     | expression[inner] PLUS IDENTIFIER
         {
@@ -160,7 +161,7 @@ expression[outer] : IDENTIFIER
         }
     | expression[inner] PLUS NUMBER
         {
-            $outer = Type::Coercion($inner,Type("","L"));
+            $outer = Type::Coercion($inner,Type(low));
         }
     | expression[inner] MINUS IDENTIFIER
         {
@@ -169,7 +170,7 @@ expression[outer] : IDENTIFIER
         }
     | expression[inner] MINUS NUMBER
         {
-            $outer = Type::Coercion($inner,Type("","L"));
+            $outer = Type::Coercion($inner,Type(low));
         }
     | expression[inner] LESS IDENTIFIER
         {
@@ -178,7 +179,7 @@ expression[outer] : IDENTIFIER
         }
     | expression[inner] LESS NUMBER
         {
-            $outer = Type::Coercion($inner,Type("","L"));
+            $outer = Type::Coercion($inner,Type(low));
         }
     | expression[inner] EQUAL IDENTIFIER
         {
@@ -187,7 +188,7 @@ expression[outer] : IDENTIFIER
         }
     | expression[inner] EQUAL NUMBER
         {
-            $outer = Type::Coercion($inner,Type("","L"));
+            $outer = Type::Coercion($inner,Type(low));
         }
 ;
 
@@ -207,9 +208,9 @@ command : WHILE expression DO block_command
                 exit(0);
             }
             if ($then.GetType() == low || $else.GetType() == low)
-                $command = Type("","L");
+                $command = Type(low);
             else 
-                $command = Type("","H");
+                $command = Type(high);
 
             cout << "Parsed if statement" << endl;
         }

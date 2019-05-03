@@ -9,6 +9,7 @@ namespace EzAquarii {
 
 enum SecurityLevel { low, high };
 static const std::string enumNames[2] = {"low", "high"};
+
 class Type {
  public:
   Type(std::string identifier, std::string type) : identifier_(identifier) {
@@ -17,6 +18,8 @@ class Type {
     else
       level_ = low;
   }
+  
+  Type(SecurityLevel level) :level_(level), identifier_("") {}
 
   static Type Coercion(const Type &lhs, const Type &rhs) {
     if (lhs.level_ == high || rhs.level_ == high)
