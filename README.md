@@ -4,5 +4,5 @@ This is an implementation of the type system in "A sound type system for secure 
 
 - [x] Build lexer/parser for the IMP language
 - [x] Implement the type system
-- [ ] Implement composition of commands
+- [x] Implement composition of commands
 - [ ] Evaluate the code
