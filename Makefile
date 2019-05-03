@@ -1,5 +1,5 @@
 CC       := g++
-CC_FLAGS := -g -Wall -Wextra -g
+CC_FLAGS := -Wall -Wextra -g
 
 BUILD	  := build
 INCLUDE	:= include
