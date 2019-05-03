@@ -31,7 +31,7 @@
 %}
 
 %option nodefault noyywrap c++ yyclass="Scanner" prefix="EzAquarii_"
-
+%x C_COMMENT
 %%
 
 "letvar" { // LETVAR keyword for local variable declaration
@@ -192,6 +192,16 @@
 
   int number = strtoull(yytext, 0, 10);
   return EzAquarii::Parser::make_NUMBER(number, EzAquarii::location());
+}
+
+<INITIAL>{
+"/*"              BEGIN(C_COMMENT);
+}
+<C_COMMENT>{
+"*/"      BEGIN(INITIAL);
+[^*\n]+   // eat comment in chunks
+"*"       // eat the lone star
+\n        yylineno++;
 }
 
 [\n\t ] {}
