@@ -114,18 +114,6 @@ program :   {
                 //driver.AddCommand(cmd);
                 cout << endl << "prompt> ";
             }
-        | program block_command SEMICOLON
-            {
-                //const Command &cmd = $block_command;
-                cout << "Block command parsed, updating AST" << endl;
-                //driver.AddCommand(cmd);
-                cout << endl << "prompt> ";
-            }
-        | program expression SEMICOLON
-            {
-                //cout << "Expression parsed: " << $expression << endl;
-                cout << endl << "prompt> ";
-            }
 ;
 block_command : LBRACES more_commands RBRACES
             {
@@ -217,6 +205,10 @@ command : WHILE expression DO block_command
     | LETVAR IDENTIFIER LBRACKET LEVEL RBRACKET { locals.push_back(Type($IDENTIFIER, $LEVEL)); } ASSIGNMENT expression IN block_command
         {
             locals.pop_back(); // Remove the declared variable
+            /* Letvar SC is determined by the block only
+            *  rather than the local variable declaration
+            */
+            $command = $block_command;
         }
     | IDENTIFIER ASSIGNMENT expression[rhs]
         {
@@ -233,11 +225,6 @@ command : WHILE expression DO block_command
 %%
 
 // Bison expects us to provide implementation - otherwise linker complains
-void EzAquarii::Parser::error(const location &loc , const std::string &message) {
-        
-        // Location should be initialized inside scanner action, but is not in this example.
-        // Let's grab location directly from driver class.
-	// cout << "Error: " << message << endl << "Location: " << loc << endl;
-	
+void EzAquarii::Parser::error(const location &loc , const std::string &message) {	
         cout << "Error: " << message << endl << "Error location: " << driver.GetLocation() << endl;
 }
